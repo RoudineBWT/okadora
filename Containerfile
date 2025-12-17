@@ -32,7 +32,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     bash /tmp/nix.sh && \
     bash /tmp/enable_services.sh && \
     bash /tmp/just.sh && \
-    bash /tmp/custom.sh
+    bash /tmp/custom.sh && \
 
 
     ostree container commit
