@@ -39,11 +39,8 @@ sysadmin_packages=(
 )
 
 programming_packages=(
+  "code"
   "kitty"
-)
-
-utility_packages=(
-  "scrcpy"
 )
 
 
