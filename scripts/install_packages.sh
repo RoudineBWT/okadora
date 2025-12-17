@@ -4,7 +4,6 @@ set -ouex pipefail
 repos=(
     solopasha/hyprland
     errornointernet/quickshell
-    alternateved/niri
     che/nerd-fonts
 )
 
@@ -67,6 +66,8 @@ packages=(
 
 # install rpms
 rpm-ostree install ${packages[@]}
+rpm-ostree override replace --enablerepo=updates-testing niri
+
 
 for repo in "${repos[@]}"; do
     dnf5 -y copr disable $repo
