@@ -14,6 +14,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,target=/var/log \
     --mount=type=tmpfs,target=/tmp \
 
+    install -m755 /ctx/repository.sh /tmp/repository.sh && \
     install -m755 /ctx/install_packages.sh  /tmp/install_packages.sh  && \
     install -m755 /ctx/enable_services.sh /tmp/enable_services.sh && \
     install -m755 /ctx/nix-overlay-service.sh /tmp/nix-overlay-service.sh && \
@@ -25,6 +26,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     install -Dm755 /ctx/okadoranix-helper.sh /usr/bin/okadoranix-helper && \
     install -Dm755 /ctx/mount-nix-overlay.sh /usr/bin/mount-nix-overlay.sh && \
     
+    bash /tmp/repository.sh && \
     bash /tmp/install_packages.sh 
     bash /tmp/nix-overlay-service.sh && \
     bash /tmp/nix.sh && \
