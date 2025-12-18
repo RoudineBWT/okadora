@@ -5,6 +5,7 @@ repos=(
     solopasha/hyprland
     errornointernet/quickshell
     che/nerd-fonts
+    scottames/ghostty
 )
 
 for repo in "${repos[@]}"; do
@@ -40,7 +41,7 @@ sysadmin_packages=(
 
 programming_packages=(
   "code"
-  "kitty"
+  "ghostty"
 )
 
 
