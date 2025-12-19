@@ -27,6 +27,79 @@ else
     log "WARNING: /etc/skel does not exist"
 fi
 
+# Install Starship via Homebrew if not already installed
+if command -v brew >/dev/null 2>&1; then
+    if ! command -v starship >/dev/null 2>&1; then
+        log "Installing Starship via Homebrew"
+        brew install starship 2>&1 | logger -t okadora-firstboot || true
+    fi
+fi
+
+# Install user Flatpaks (optional apps)
+if command -v flatpak >/dev/null 2>&1; then
+    log "Installing optional user Flatpaks"
+    
+    USER_FLATPAKS=(
+        # Media (user install for Spicetify compatibility)
+        "com.spotify.Client"
+        
+        # Development & Tools
+        "io.podman_desktop.PodmanDesktop"
+        
+        # Communication
+        "dev.vencord.Vesktop"
+        
+        # Gaming
+        "com.heroicgameslauncher.hgl"
+        "org.prismlauncher.PrismLauncher"
+        
+        # Media
+        "com.stremio.Stremio"
+    )
+    
+    for app in "${USER_FLATPAKS[@]}"; do
+        if ! flatpak list --user | grep -q "$app"; then
+            log "Installing $app"
+            flatpak install --user -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+        fi
+    done
+    
+    log "User Flatpaks installation complete"
+fi
+
+# Install Spicetify for Spotify customization
+if flatpak list --user | grep -q "com.spotify.Client"; then
+    if ! command -v spicetify >/dev/null 2>&1; then
+        log "Installing Spicetify"
+        
+        # Install Spicetify
+        curl -fsSL https://raw.githubusercontent.com/spicetify/cli/main/install.sh | sh 2>&1 | logger -t okadora-firstboot || true
+        
+        # Add Spicetify to PATH if not already there
+        if ! grep -q "spicetify" "$HOME/.bashrc" 2>/dev/null; then
+            echo 'export PATH="$HOME/.spicetify:$PATH"' >> "$HOME/.bashrc"
+        fi
+        
+        # Wait for Spotify to be fully set up
+        sleep 2
+        
+        # Initialize Spicetify with Spotify Flatpak
+        if [ -x "$HOME/.spicetify/spicetify" ]; then
+            export PATH="$HOME/.spicetify:$PATH"
+            
+            # Configure Spicetify for Flatpak
+            spicetify config spotify_path "$HOME/.var/app/com.spotify.Client/config/spotify" 2>&1 | logger -t okadora-firstboot || true
+            spicetify config prefs_path "$HOME/.var/app/com.spotify.Client/config/spotify/prefs" 2>&1 | logger -t okadora-firstboot || true
+            
+            # Backup and apply
+            spicetify backup apply 2>&1 | logger -t okadora-firstboot || true
+            
+            log "Spicetify installed and configured"
+        fi
+    fi
+fi
+
+
 # Okadora-specific configurations (optional)
 # Uncomment and add your custom configs here:
 
