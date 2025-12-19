@@ -31,13 +31,6 @@ niri_packages=(
 "mate-polkit"
 )
 
-sysadmin_packages=(
-  "libguestfs-tools"
-  "NetworkManager-tui"
-  "virt-install"
-  "virt-manager"
-  "virt-viewer"
-)
 
 programming_packages=(
   "code"
