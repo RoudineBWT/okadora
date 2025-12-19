@@ -35,27 +35,67 @@ if command -v brew >/dev/null 2>&1; then
     fi
 fi
 
-# Install user Flatpaks (optional apps)
+# Install Flatpak applications
 if command -v flatpak >/dev/null 2>&1; then
-    log "Installing optional user Flatpaks"
+    log "Installing Flatpak applications"
     
-    USER_FLATPAKS=(
-        # Media (user install for Spicetify compatibility)
-        "com.spotify.Client"
+    # Essential apps - installed first
+    log "Installing essential applications..."
+    ESSENTIAL_FLATPAKS=(
+        # Browser
+        "org.mozilla.firefox"
         
-        # Development & Tools
-        "io.podman_desktop.PodmanDesktop"
+        # Communication
+        "org.telegram.desktop"
+        "im.riot.Riot"
+        
+        # Media
+        "io.bassi.Amberol"
+        "org.gnome.Showtime"
+        
+        # Creative
+        "org.gimp.GIMP"
+        "com.github.wwmm.easyeffects"
+    )
+    
+    for app in "${ESSENTIAL_FLATPAKS[@]}"; do
+        if ! flatpak list --user | grep -q "$app"; then
+            log "Installing $app"
+            flatpak install --user -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+        fi
+    done
+    
+    # Optional apps - nice to have
+    log "Installing optional applications..."
+    OPTIONAL_FLATPAKS=(
+        # Media & Entertainment
+        "com.spotify.Client"
+        "com.stremio.Stremio"
         
         # Communication
         "dev.vencord.Vesktop"
         
+        # Streaming & Recording
+        "com.obsproject.Studio"
+        "com.dec05eba.gpu_screen_recorder"
+        
+        # Development & Tools
+        "io.podman_desktop.PodmanDesktop"
+        
+        # Creative Tools
+        "org.nickvision.tubeconverter"
+        
         # Gaming
         "com.heroicgameslauncher.hgl"
         "org.prismlauncher.PrismLauncher"
-        
-        # Media
-        "com.stremio.Stremio"
     )
+    
+    for app in "${OPTIONAL_FLATPAKS[@]}"; do
+        if ! flatpak list --user | grep -q "$app"; then
+            log "Installing $app"
+            flatpak install -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+        fi
+    done
     
     for app in "${USER_FLATPAKS[@]}"; do
         if ! flatpak list --user | grep -q "$app"; then
