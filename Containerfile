@@ -42,9 +42,10 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     install -Dm755 /usr/share/okadora-files/okadora-firstboot-setup /usr/libexec/okadora-firstboot-setup && \
     mkdir -p /var/lib/okadora && \
     systemctl --global enable okadora-firstboot.service && \
+    rm -rf /usr/share/okadora-files && \
     rm -rf /system_files && \
     rpm-ostree cleanup -m && \
-     rm -rf /var/cache/dnf/* && \
+    rm -rf /var/cache/dnf/* && \
     rm -rf /var/cache/rpm-ostree/* && \
     rm -rf /var/tmp/* && \
     rm -rf /tmp/* && \
