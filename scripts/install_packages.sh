@@ -28,7 +28,7 @@ niri_packages=(
 "nerd-fonts"
 "quickshell"
 "wlogout"
-"polkit-kde"
+"mate-polkit"
 )
 
 sysadmin_packages=(
