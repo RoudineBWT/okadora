@@ -4,13 +4,13 @@ ARG BASE_IMAGE=ghcr.io/ublue-os/bazzite-gnome:latest
 FROM scratch AS ctx
 COPY system_files /system_files
 COPY scripts /scripts
-
+COPY files /files
 
 # Base Image
 FROM ${BASE_IMAGE}
 
 COPY --from=ctx /system_files /
-COPY files /tmp/okadora-files
+COPY --from=ctx /files /tmp/okadora-files
 
 # OPT preparation
 
