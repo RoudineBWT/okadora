@@ -12,6 +12,12 @@ Rebase from any Fedora Atomic based distro :
 ```
 sudo bootc switch ghcr.io/roudinebwt/okadora:latest
 ```
+
+If you have a Nvidia GPU use this one :
+```
+sudo bootc switch ghcr.io/roudinebwt/okadora-nvidia:latest
+```
+
 To use any additionnal feature use : 
 
 ```

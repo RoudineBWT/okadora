@@ -6,6 +6,7 @@ COPY scripts /scripts
 
 # Base Image
 FROM ghcr.io/ublue-os/bazzite-gnome:latest AS okadora
+FROM ghcr.io/ublue-os/bazzite-gnome-nvidia:latest AS okadora-nvidia
 
 COPY --from=ctx /system_files /
 
