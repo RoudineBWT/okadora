@@ -36,6 +36,10 @@ fi
 
 # Example: Apply dconf settings (for GNOME)
 # dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+# Set Niri as default session
+if command -v dconf >/dev/null 2>&1; then
+    dconf write /org/gnome/desktop/session/session-name "'niri'"
+fi
 
 # Example: Default Git configuration
 # if ! git config --global user.name >/dev/null 2>&1; then
