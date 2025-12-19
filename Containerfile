@@ -10,7 +10,7 @@ COPY files /files
 FROM ${BASE_IMAGE}
 
 COPY --from=ctx /system_files /
-COPY --from=ctx /files /tmp/okadora-files
+COPY --from=ctx /files /usr/share/okadora-files
 
 # OPT preparation
 
@@ -38,8 +38,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     bash /tmp/enable_services.sh && \
     bash /tmp/just.sh && \
     bash /tmp/custom.sh && \
-    install -Dm644 /tmp/okadora-files/okadora-firstboot.service /usr/etc/systemd/user/okadora-firstboot.service && \
-    install -Dm755 /tmp/okadora-files/okadora-firstboot-setup /usr/libexec/okadora-firstboot-setup && \
+    install -Dm644 /usr/share/okadora-files/okadora-firstboot.service /usr/etc/systemd/user/okadora-firstboot.service && \
+    install -Dm755 /usr/share/okadora-files/okadora-firstboot-setup /usr/libexec/okadora-firstboot-setup && \
     mkdir -p /var/lib/okadora && \
     systemctl --global enable okadora-firstboot.service && \
     rm -rf /system_files && \
