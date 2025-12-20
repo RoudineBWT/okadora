@@ -18,9 +18,6 @@ If you have a Nvidia GPU use this one :
 sudo bootc switch ghcr.io/roudinebwt/okadora-nvidia:latest
 ```
 
-> **Note** : You will need to click on the gear icon ⚙️ in gdm and select niri instead of gnome. I can't get gdm to use niri by default.
-
-
 To use any additionnal feature use : 
 
 ```
@@ -35,6 +32,87 @@ nix-channel --update
 ```
 
 Documentation : [Nix-Determinate](https://docs.determinate.systems/determinate-nix/), [Homemanager](https://nix-community.github.io/home-manager/), [Flakes](https://zero-to-nix.com/concepts/flakes/)  
+
+
+## Packages
+
+In addition to the packages included in [Bazzite](https://github.com/ublue-os/bazzite), I include the following installed by default:
+
+### Layered Packages (through RPM-Ostree)
+
+#### Desktop
+
+- niri
+- matugen
+- xwayland-satelitte
+- xdg-desktop-portal
+- wlsunset
+- cava
+- cliphist
+- ddcutil
+- brightnessctl
+- swww
+- qt6ct
+- qt5ct
+- nwg-look
+- nerd-fonts
+- quickshell
+- wlogout
+- mate-polkit
+
+#### Programming
+
+- VSCode
+- Ghostty
+
+### Git Repositories (simple clone)
+
+- [FZF-Tab-Completion](https://github.com/lincheney/fzf-tab-completion)
+- [Noctalia-shell](https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar)
+
+### System Flatpaks
+
+#### Browser
+
+- Firefox
+
+#### Communications
+
+- Element
+- Telegram
+
+#### Multimedia
+
+- Showtime
+- Amberol
+
+#### Design
+
+- Gimp
+
+### User Flatpaks
+
+#### Communications
+
+- Discord (using Vesktop)
+
+#### Multimedia
+
+- Spotify
+- Stremio
+- OBS Studio
+- OBS DroidCam Plugin
+- GPU Screen Recorder
+- Parabolic 
+
+#### Programming
+
+- Podman Desktop
+
+#### Gaming
+
+- Heroic Games Launcher
+- Prismlauncher
 
 -----
 
