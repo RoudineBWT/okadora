@@ -1,12 +1,19 @@
 [Unit]
-Description=Okadora User Configuration Check
+Description=Okadora First Boot System Setup
 Documentation=https://github.com/RoudineBWT/okadora
-After=local-fs.target network-online.target
+After=local-fs.target network-online.target graphical.target multi-user.target
 Wants=network-online.target
+Requires=network-online.target
 
 [Service]
 Type=oneshot
 ExecStartPre=/usr/bin/mkdir -p /var/lib/okadora
+ExecStartPre=/bin/sh -c 'until ping -c1 flathub.org >/dev/null 2>&1; do sleep 2; done'
 ExecStart=/usr/libexec/okadora_firstboot_script.sh
+RemainAfterExit=yes
 StandardOutput=journal
 StandardError=journal
+TimeoutStartSec=600
+
+[Install]
+WantedBy=multi-user.target
