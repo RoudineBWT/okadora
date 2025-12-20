@@ -1,6 +1,5 @@
 #!/bin/bash
 # Okadora First Boot Setup Script - System Service Version
-# Applies configuration to all real users on first boot
 
 set -euo pipefail
 
@@ -11,49 +10,16 @@ log() {
 
 log "Starting system-wide first boot configuration"
 
-# Créer un script temporaire pour chaque utilisateur (dans /var/lib au lieu de /tmp)
-TEMP_SCRIPT="/var/lib/okadora/okadora-user-setup.sh"
-mkdir -p /var/lib/okadora
-
-cat > "$TEMP_SCRIPT" << 'SCRIPT_EOF'
-#!/bin/bash
-set -euo pipefail
-
-log() {
-    echo "[Okadora FirstBoot] $1"
-    logger -t okadora-firstboot "$1"
-}
-
-log "Starting configuration for user $USER"
-
-# Check that HOME is defined
-if [ -z "${HOME:-}" ]; then
-    log "ERROR: HOME is not defined"
-    exit 1
-fi
-
-# Copy configuration files from /etc/skel
-if [ -d "/etc/skel" ]; then
-    log "Copying configurations from /etc/skel to $HOME"
-    rsync -a --ignore-existing /etc/skel/ "$HOME/" 2>&1 | logger -t okadora-firstboot || true
-else
-    log "WARNING: /etc/skel does not exist"
-fi
-
-# Install Starship via Homebrew if not already installed
-if command -v brew >/dev/null 2>&1; then
-    if ! command -v starship >/dev/null 2>&1; then
-        log "Installing Starship via Homebrew"
-        brew install starship 2>&1 | logger -t okadora-firstboot || true
-    fi
-fi
-
-# Install Flatpak applications
-if command -v flatpak >/dev/null 2>&1; then
-    log "Installing Flatpak applications"
+# Installer les flatpaks essentiels au niveau SYSTEM (une seule fois pour tous les utilisateurs)
+if [ ! -f "/var/lib/okadora/system-flatpaks-installed" ]; then
+    log "Installing essential system flatpaks"
     
-    # Essential apps - installed first
-    log "Installing essential applications..."
+    # Vérifier que flathub system existe
+    if ! flatpak remotes --system | grep -q flathub; then
+        log "Adding flathub remote for system"
+        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
+    fi
+    
     ESSENTIAL_FLATPAKS=(
         "org.mozilla.firefox"
         "org.telegram.desktop"
@@ -65,87 +31,25 @@ if command -v flatpak >/dev/null 2>&1; then
     )
     
     for app in "${ESSENTIAL_FLATPAKS[@]}"; do
-        if ! flatpak list --user | grep -q "$app"; then
-            log "Installing $app"
-            flatpak install --user -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+        if ! flatpak list --system | grep -q "$app"; then
+            log "Installing system flatpak: $app"
+            flatpak install --system -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
         fi
     done
     
-    # Optional apps - nice to have
-    log "Installing optional applications..."
-    OPTIONAL_FLATPAKS=(
-        "com.spotify.Client"
-        "com.stremio.Stremio"
-        "dev.vencord.Vesktop"
-        "com.obsproject.Studio"
-        "com.dec05eba.gpu_screen_recorder"
-        "io.podman_desktop.PodmanDesktop"
-        "org.nickvision.tubeconverter"
-        "com.heroicgameslauncher.hgl"
-        "org.prismlauncher.PrismLauncher"
-    )
-    
-    for app in "${OPTIONAL_FLATPAKS[@]}"; do
-        if ! flatpak list --user | grep -q "$app"; then
-            log "Installing $app"
-            flatpak install --user -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
-        fi
-    done
-    
-    # Install OBS DroidCam plugin if OBS is installed
-    if flatpak list --user | grep -q "com.obsproject.Studio"; then
-        log "Installing OBS DroidCam plugin"
-        flatpak install --user -y --noninteractive flathub com.obsproject.Studio.Plugin.DroidCam 2>&1 | logger -t okadora-firstboot || true
-    fi
-    
-    log "Flatpak installation complete"
+    mkdir -p /var/lib/okadora
+    touch /var/lib/okadora/system-flatpaks-installed
+    log "System flatpaks installation complete"
 fi
 
-# Install Spicetify for Spotify customization
-if flatpak list --user | grep -q "com.spotify.Client"; then
-    if ! command -v spicetify >/dev/null 2>&1; then
-        log "Installing Spicetify"
-        
-        # Install Spicetify
-        curl -fsSL https://raw.githubusercontent.com/spicetify/cli/main/install.sh | sh 2>&1 | logger -t okadora-firstboot || true
-        
-        # Add Spicetify to PATH if not already there
-        if ! grep -q "spicetify" "$HOME/.bashrc" 2>/dev/null; then
-            echo 'export PATH="$HOME/.spicetify:$PATH"' >> "$HOME/.bashrc"
-        fi
-        
-        # Wait for Spotify to be fully set up
-        sleep 2
-        
-        # Initialize Spicetify with Spotify Flatpak
-        if [ -x "$HOME/.spicetify/spicetify" ]; then
-            export PATH="$HOME/.spicetify:$PATH"
-            
-            # Configure Spicetify for Flatpak
-            spicetify config spotify_path "$HOME/.var/app/com.spotify.Client/config/spotify" 2>&1 | logger -t okadora-firstboot || true
-            spicetify config prefs_path "$HOME/.var/app/com.spotify.Client/config/spotify/prefs" 2>&1 | logger -t okadora-firstboot || true
-            
-            # Backup and apply
-            spicetify backup apply 2>&1 | logger -t okadora-firstboot || true
-            
-            log "Spicetify installed and configured"
-        fi
-    fi
-fi
+# Script utilisateur séparé
+USER_SCRIPT="/usr/libexec/okadora_user_setup.sh"
 
-log "Configuration completed successfully for $USER"
-SCRIPT_EOF
-
-chmod +x "$TEMP_SCRIPT"
-
-# Trouver tous les utilisateurs réels (UID >= 1000, avec un home dans /home ou /var/home)
+# Trouver tous les utilisateurs réels
 while IFS=: read -r username _ uid _ _ homedir shell; do
-    # Vérifier que c'est un utilisateur réel (pas les utilisateurs système comme nobody)
-    # Accepter tous les UID >= 1000, même > 65534
     if [ "$uid" -ge 1000 ] && [ -d "$homedir" ] && [[ "$homedir" == /home/* || "$homedir" == /var/home/* ]]; then
         log "Found user: $username (UID: $uid, HOME: $homedir)"
         
-        # Vérifier si déjà configuré pour cet utilisateur
         if [ -f "/var/lib/okadora/${username}-configured" ]; then
             log "User $username already configured, skipping"
             continue
@@ -153,19 +57,13 @@ while IFS=: read -r username _ uid _ _ homedir shell; do
         
         log "Configuring user: $username"
         
-        # Exécuter le script en tant qu'utilisateur
-        su - "$username" "$TEMP_SCRIPT" 2>&1 | logger -t okadora-firstboot || log "Warning: Configuration for $username completed with errors"
+        mkdir -p /var/lib/okadora
+        su - "$username" "$USER_SCRIPT" 2>&1 | logger -t okadora-firstboot || log "Warning: Configuration for $username completed with errors"
         
-        # Marquer comme configuré
         touch "/var/lib/okadora/${username}-configured"
         log "User $username configuration complete"
     fi
 done < /etc/passwd
 
-# Nettoyer
-rm -f "$TEMP_SCRIPT"
-
 log "System-wide first boot configuration completed"
-log "This script will not run again"
-
 exit 0
