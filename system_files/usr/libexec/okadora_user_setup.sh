@@ -156,6 +156,12 @@ fi
 # ============================================
 # STARSHIP (via Homebrew)
 # ============================================
+
+if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+
 if command -v brew >/dev/null 2>&1; then
     if ! command -v starship >/dev/null 2>&1; then
         log "Installing Starship via Homebrew"
