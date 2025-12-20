@@ -34,6 +34,26 @@ nix-channel --update
 Documentation : [Nix-Determinate](https://docs.determinate.systems/determinate-nix/), [Homemanager](https://nix-community.github.io/home-manager/), [Flakes](https://zero-to-nix.com/concepts/flakes/)  
 
 
+
+## 📁 File Structure
+
+```
+.config/niri/
+├── cfg/
+│   ├── animation.kdl      # Animation settings
+│   ├── autostart.kdl      # Autostart applications
+│   ├── display.kdl        # Display configuration
+│   ├── input.kdl          # Input devices configuration
+│   ├── keybinds.kdl       # Keyboard shortcuts
+│   ├── layout.kdl         # Window layout configuration
+│   ├── misc.kdl           # Miscellaneous options
+│   └── rules.kdl          # Window rules
+├── config.kdl             # Main configuration file
+└── noctalia.kdl           # Noctalia theme configuration
+```
+
+
+
 ## Packages
 
 In addition to the packages included in [Bazzite](https://github.com/ublue-os/bazzite), I include the following installed by default:
