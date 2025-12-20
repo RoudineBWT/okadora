@@ -131,7 +131,7 @@
                 {
                     "colorizeDistroLogo": false,
                     "colorizeSystemIcon": "none",
-                    "customIconPath": "/home/roudine/Pictures/Bazzite_Logo.svg.png",
+                    "customIconPath": "/usr/share/logo/Bazzite_Logo.svg.png",
                     "enableColorization": false,
                     "icon": "",
                     "id": "ControlCenter",

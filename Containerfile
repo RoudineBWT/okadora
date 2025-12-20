@@ -45,7 +45,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 
 
 # Enable okadora firstboot service
-RUN mkdir -p /var/lib/okadora && \
     systemctl --global enable okadora-firstboot.service
 
 # Container verification

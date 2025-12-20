@@ -1,7 +1,7 @@
 {
-    "defaultWallpaper": "/etc/xdg/quickshell/noctalia-shell/Assets/Wallpaper/noctalia.png",
+    "defaultWallpaper": "/usr/share/backgrounds/pawel-catppucinized.png",
     "wallpapers": {
-        "DP-1": "/home/roudine/Pictures/wallpapers/pawel-catppucinized.png",
-        "DP-3": "/home/roudine/Pictures/wallpapers/pawel-catppucinized.png"
+        "DP-1": "~/Pictures/wallpapers/pawel-catppucinized.png",
+        "DP-3": "~/Pictures/wallpapers/pawel-catppucinized.png"
     }
 }

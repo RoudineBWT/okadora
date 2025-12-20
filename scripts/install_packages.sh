@@ -40,7 +40,6 @@ programming_packages=(
 
 packages=(
   ${niri_packages[@]}
-  ${sysadmin_packages[@]}
   ${programming_packages[@]}
 )
 
