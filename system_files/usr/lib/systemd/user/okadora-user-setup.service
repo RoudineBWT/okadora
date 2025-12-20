@@ -1,0 +1,12 @@
+[Unit]
+Description=Okadora User Configuration Setup
+After=default.target
+ConditionPathExists=/usr/libexec/okadora_user_setup.sh
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/okadora_user_setup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

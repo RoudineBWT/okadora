@@ -51,6 +51,7 @@ RUN dconf update || true
 
 # Enable okadora firstboot service
 RUN systemctl enable okadora-firstboot.service
+RUN systemctl --global enable okadora-user-setup.service
 
 # Container verification
 
