@@ -64,9 +64,9 @@ if command -v flatpak >/dev/null 2>&1; then
     )
     
     for app in "${ESSENTIAL_FLATPAKS[@]}"; do
-        if ! flatpak list --user | grep -q "$app"; then
+        if ! flatpak list | grep -q "$app"; then
             log "Installing $app"
-            flatpak install --user -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+            flatpak install  -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
         fi
     done
     
