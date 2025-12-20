@@ -18,7 +18,7 @@ If you have a Nvidia GPU use this one :
 sudo bootc switch ghcr.io/roudinebwt/okadora-nvidia:latest
 ```
 
-> **Note** : *** You will need to click on the gear icon ⚙️ in gdm and select niri instead of gnome. I can't get gdm to use niri by default. ***
+*** You will need to click on the gear icon ⚙️ in gdm and select niri instead of gnome. I can't get gdm to use niri by default. ***
 
 
 To use any additionnal feature use : 
