@@ -1,0 +1,11 @@
+[Unit]
+Description=Okadora User Configuration Check Timer
+Documentation=https://github.com/RoudineBWT/okadora
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=1d
+Persistent=true
+
+[Install]
+WantedBy=timers.target

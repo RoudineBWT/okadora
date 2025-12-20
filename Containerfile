@@ -45,7 +45,8 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
 
 
 # Enable okadora firstboot service
-RUN systemctl enable okadora-firstboot.service
+RUN systemctl enable okadora-firstboot.service && \
+    systemctl enable okadora-user-check.timer
 
 # Container verification
 

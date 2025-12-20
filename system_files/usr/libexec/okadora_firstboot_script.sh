@@ -66,7 +66,7 @@ if command -v flatpak >/dev/null 2>&1; then
     for app in "${ESSENTIAL_FLATPAKS[@]}"; do
         if ! flatpak list | grep -q "$app"; then
             log "Installing $app"
-            flatpak install  -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+            flatpak install -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
         fi
     done
     
@@ -146,6 +146,13 @@ while IFS=: read -r username _ uid _ _ homedir shell; do
         # Vérifier si déjà configuré pour cet utilisateur
         if [ -f "/var/lib/okadora/${username}-configured" ]; then
             log "User $username already configured, skipping"
+            continue
+        fi
+        
+        # Vérifier si l'utilisateur a déjà des flatpaks installés (donc déjà configuré manuellement)
+        if su - "$username" -c "flatpak list --user 2>/dev/null | grep -q org.mozilla.firefox" 2>/dev/null; then
+            log "User $username already has Firefox installed, marking as configured"
+            touch "/var/lib/okadora/${username}-configured"
             continue
         fi
         
