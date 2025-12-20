@@ -52,9 +52,11 @@ RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.
 # UPDATE DCONF
 RUN dconf update || true
 
+# Enable force niri session
+RUN systemctl enable force-niri-session.service
+
 # Enable okadora firstboot service
 RUN systemctl enable okadora-firstboot.service
-RUN systemctl enable force-niri-session.service
 RUN systemctl --global enable okadora-user-setup.service
 
 
