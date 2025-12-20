@@ -64,9 +64,9 @@ if command -v flatpak >/dev/null 2>&1; then
     )
     
     for app in "${ESSENTIAL_FLATPAKS[@]}"; do
-        if ! flatpak list | grep -q "$app"; then
+        if ! flatpak list --user | grep -q "$app"; then
             log "Installing $app"
-            flatpak install -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
+            flatpak install --user -y --noninteractive flathub "$app" 2>&1 | logger -t okadora-firstboot || true
         fi
     done
     
@@ -139,9 +139,10 @@ chmod +x "$TEMP_SCRIPT"
 
 # Trouver tous les utilisateurs réels (UID >= 1000, avec un home dans /home ou /var/home)
 while IFS=: read -r username _ uid _ _ homedir shell; do
-    # Vérifier que c'est un utilisateur réel
-    if [ "$uid" -ge 1000 ] && [ "$uid" -lt 65534 ] && [ -d "$homedir" ]; then
-        log "Configuring for user: $username (UID: $uid, HOME: $homedir)"
+    # Vérifier que c'est un utilisateur réel (pas les utilisateurs système comme nobody)
+    # Accepter tous les UID >= 1000, même > 65534
+    if [ "$uid" -ge 1000 ] && [ -d "$homedir" ] && [[ "$homedir" == /home/* || "$homedir" == /var/home/* ]]; then
+        log "Found user: $username (UID: $uid, HOME: $homedir)"
         
         # Vérifier si déjà configuré pour cet utilisateur
         if [ -f "/var/lib/okadora/${username}-configured" ]; then
@@ -149,12 +150,7 @@ while IFS=: read -r username _ uid _ _ homedir shell; do
             continue
         fi
         
-        # Vérifier si l'utilisateur a déjà des flatpaks installés (donc déjà configuré manuellement)
-        if su - "$username" -c "flatpak list --user 2>/dev/null | grep -q org.mozilla.firefox" 2>/dev/null; then
-            log "User $username already has Firefox installed, marking as configured"
-            touch "/var/lib/okadora/${username}-configured"
-            continue
-        fi
+        log "Configuring user: $username"
         
         # Exécuter le script en tant qu'utilisateur
         su - "$username" "$TEMP_SCRIPT" 2>&1 | logger -t okadora-firstboot || log "Warning: Configuration for $username completed with errors"
