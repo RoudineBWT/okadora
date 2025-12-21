@@ -8,7 +8,7 @@ HOME_URL="https://github.com/RoudineBWT/okadora"
 echo "Okadora" | tee "/etc/hostname"
 
 # Désactiver les overrides Bazzite potentiels
-rm -f /usr/etc/profile.d/bazzite-neofetch.sh 2>/dev/null || true
+rm -f /etc/profile.d/bazzite-neofetch.sh 2>/dev/null || true
 rm -f /etc/profile.d/bazzite-*.sh 2>/dev/null || true
 
 # Modifier os-release
@@ -32,16 +32,16 @@ EOF
 echo "=== Configuring Okadora fastfetch ==="
 
 # Créer le répertoire s'il n'existe pas
-mkdir -p /usr/etc/profile.d
+mkdir -p /etc/profile.d
 
 # Remplacer l'alias Bazzite
-cat > /usr/etc/profile.d/okadora-neofetch.sh <<'EOF'
+cat > /etc/profile.d/okadora-neofetch.sh <<'EOF'
 #!/bin/bash
 # Okadora Fastfetch configuration
 alias fastfetch='/usr/bin/fastfetch -c /usr/share/okadora/fastfetch.jsonc'
 alias neofetch='/usr/bin/fastfetch -c /usr/share/okadora/fastfetch.jsonc'
 EOF
 
-chmod +x /usr/etc/profile.d/okadora-neofetch.sh
+chmod +x /etc/profile.d/okadora-neofetch.sh
 
 echo "=== Okadora branding applied successfully ==="
