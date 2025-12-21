@@ -1,9 +1,6 @@
 [org/gnome/desktop/session]
 session-name='niri'
-```
 
-**Contenu de `system_files/etc/dconf/profile/gdm` :**
-```
 user-db:user
 system-db:gdm
 file-db:/usr/share/gdm/greeter-dconf-defaults

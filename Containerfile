@@ -52,6 +52,13 @@ RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.
 # UPDATE DCONF
 RUN dconf update || true
 
+RUN cat > /usr/lib/tmpfiles.d/okadora-var.conf << 'EOF'
+d /var/lib/dnf 0755 root root - -
+d /var/lib/dnf/repos 0755 root root - -
+d /var/lib/flatpak 0755 root root - -
+EOF
+
+
 # Enable force niri session
 RUN systemctl enable force-niri-session.service
 
