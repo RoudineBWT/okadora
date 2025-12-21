@@ -1,5 +1,5 @@
 #!/bin/bash
-# Okadora First Boot Setup Script - System Service Version
+# Okadora First Boot Setup Script - System Service Version (Fedora Atomic)
 
 set -euo pipefail
 
@@ -10,6 +10,41 @@ log() {
 
 log "Starting system-wide first boot configuration"
 
+# Configuration du hostname
+if [ ! -f "/var/lib/okadora/hostname-configured" ]; then
+    log "Setting hostname to 'Okadora'"
+    
+    # Sur Fedora Atomic, hostnamectl fonctionne normalement
+    hostnamectl set-hostname "Okadora" 2>&1 | logger -t okadora-firstboot || log "Warning: hostnamectl failed"
+    
+    mkdir -p /var/lib/okadora
+    touch /var/lib/okadora/hostname-configured
+    log "Hostname configured successfully"
+fi
+
+# Rebuild de l'initramfs pour Plymouth (spécifique Fedora Atomic)
+if [ ! -f "/var/lib/okadora/initramfs-rebuilt" ]; then
+    log "Rebuilding initramfs for Plymouth on Fedora Atomic"
+    
+    # Sur Fedora Atomic, on doit utiliser rpm-ostree pour regénérer l'initramfs
+    if command -v rpm-ostree &> /dev/null; then
+        log "Using rpm-ostree to regenerate initramfs"
+        rpm-ostree initramfs --enable 2>&1 | logger -t okadora-firstboot || log "Warning: initramfs enable had errors"
+        
+        # Regénérer pour le déploiement actuel
+        log "Regenerating initramfs for current deployment"
+        rpm-ostree initramfs-etc --track=/etc/plymouth 2>&1 | logger -t okadora-firstboot || true
+        
+        log "Note: A reboot may be required for initramfs changes to take full effect"
+    else
+        log "Warning: rpm-ostree not found, cannot rebuild initramfs on atomic system"
+    fi
+    
+    mkdir -p /var/lib/okadora
+    touch /var/lib/okadora/initramfs-rebuilt
+    log "Initramfs rebuild complete"
+fi
+
 # Installer les flatpaks essentiels au niveau SYSTEM (une seule fois pour tous les utilisateurs)
 if [ ! -f "/var/lib/okadora/system-flatpaks-installed" ]; then
     log "Installing essential system flatpaks"
@@ -17,7 +52,7 @@ if [ ! -f "/var/lib/okadora/system-flatpaks-installed" ]; then
     # Vérifier que flathub system existe
     if ! flatpak remotes --system | grep -q flathub; then
         log "Adding flathub remote for system"
-        flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo || true
+        flatpak remote-add --if-not-exists --system flathub https://flathub.org/repo/flathub.flatpakrepo || true
     fi
     
     ESSENTIAL_FLATPAKS=(
