@@ -29,7 +29,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     install -m755 /ctx/scripts/enable_services.sh /tmp/enable_services.sh && \
     install -m755 /ctx/scripts/nix-overlay-service.sh /tmp/nix-overlay-service.sh && \
     install -m755 /ctx/scripts/nix.sh /tmp/nix.sh && \
-    install -m755 /ctx/scripts/custom.sh /tmp/custom.sh && \
     install -Dm755 /ctx/scripts/okadoranix-helper.sh /usr/bin/okadoranix-helper && \
     install -Dm755 /ctx/scripts/mount-nix-overlay.sh /usr/bin/mount-nix-overlay.sh && \
     install -Dm755 /ctx/scripts/force-niri-session.sh /usr/bin/force-niri-session.sh && \
@@ -38,7 +37,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     bash /tmp/nix-overlay-service.sh && \
     bash /tmp/nix.sh && \
     bash /tmp/enable_services.sh && \
-    bash /tmp/custom.sh && \
     rm -rf /system_files && \
     rpm-ostree cleanup -m && \
     rm -rf /var/cache/dnf/* && \
@@ -58,6 +56,12 @@ RUN systemctl enable force-niri-session.service
 # Enable okadora firstboot service
 RUN systemctl enable okadora-firstboot.service
 RUN systemctl --global enable okadora-user-setup.service
+
+# CUSTOM BRANDING
+COPY scripts/custom.sh /tmp/custom.sh
+RUN chmod +x /tmp/custom.sh && \
+    bash /tmp/custom.sh && \
+    rm -f /tmp/custom.sh
 
 
 # Container verification
