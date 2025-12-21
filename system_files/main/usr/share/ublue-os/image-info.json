@@ -1,0 +1,9 @@
+   {
+     "image-name": "okadora",
+     "image-flavor": "main",
+     "image-vendor": "roudinebwt",
+     "image-tag": "latest",
+     "image-registry": "ghcr.io",
+     "base-image-name": "bazzite-gnome",
+     "fedora-version": "43"
+   }

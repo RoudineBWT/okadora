@@ -1,0 +1,9 @@
+   {
+     "image-name": "okadora-nvidia",
+     "image-flavor": "nvidia",
+     "image-vendor": "roudinebwt",
+     "image-tag": "latest",
+     "image-registry": "ghcr.io",
+     "base-image-name": "bazzite-gnome-nvidia",
+     "fedora-version": "43"
+   }
