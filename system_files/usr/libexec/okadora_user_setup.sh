@@ -184,6 +184,8 @@ if command -v flatpak >/dev/null 2>&1; then
     # Apps optionnelles user (seulement pour nouveaux users ou si pas installées)
     OPTIONAL_FLATPAKS=(
         "com.spotify.Client"
+        "com.brave.Browser"
+        "app.zen_browser.zen"
         "com.stremio.Stremio"
         "dev.vencord.Vesktop"
         "com.obsproject.Studio"

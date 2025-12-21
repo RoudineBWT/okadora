@@ -112,6 +112,11 @@ In addition to the packages included in [Bazzite](https://github.com/ublue-os/ba
 
 ### User Flatpaks
 
+#### Browser
+
+- Brave
+- Zen Browser
+
 #### Communications
 
 - Discord (using Vesktop)

@@ -55,6 +55,7 @@ if [ ! -f "/var/lib/okadora/system-flatpaks-installed" ]; then
     
     ESSENTIAL_FLATPAKS=(
         "org.mozilla.firefox"
+        "com.github.tchx84.Flatseal"
         "org.telegram.desktop"
         "im.riot.Riot"
         "io.bassi.Amberol"
