@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== Applying Okadora branding ==="
+echo "=== Applying Okadora branding (build-time) ==="
 
 # custom name
 HOME_URL="https://github.com/RoudineBWT/okadora"
@@ -11,7 +11,14 @@ echo "Okadora" | tee "/etc/hostname"
 rm -f /etc/profile.d/bazzite-neofetch.sh 2>/dev/null || true
 rm -f /etc/profile.d/bazzite-*.sh 2>/dev/null || true
 
-# Modifier os-release
+# Chercher et désactiver les services de branding Bazzite
+echo "=== Searching for Bazzite branding services ==="
+find /usr/lib/systemd/system -name "*bazzite*branding*" -o -name "*ublue*branding*" 2>/dev/null | while read service; do
+    echo "Found and removing: $service"
+    rm -f "$service"
+done
+
+# Modifier os-release (sera aussi fait au boot par le service)
 sed -i -f - /usr/lib/os-release <<EOF
 s|^NAME=.*|NAME="Okadora"|
 s|^PRETTY_NAME=.*|PRETTY_NAME="Okadora"|
