@@ -75,6 +75,25 @@ if [ ! -f "/var/lib/okadora/system-flatpaks-installed" ]; then
     log "System flatpaks installation complete"
 fi
 
+# Configuration des thèmes et icônes pour les applications Flatpak
+if [ ! -f "/var/lib/okadora/flatpak-themes-configured" ]; then
+    log "Configuring Flatpak theme and icon access"
+    
+    flatpak override --system --filesystem=xdg-config/gtk-3.0:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=xdg-config/gtk-4.0:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=xdg-config/qt5ct:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=xdg-config/qt6ct:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=xdg-data/color-schemes:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=xdg-data/themes:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=xdg-data/icons:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=/usr/share/themes:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --filesystem=/usr/share/icons:ro 2>&1 | logger -t okadora-firstboot || true
+    flatpak override --system --env=QT_QPA_PLATFORMTHEME=kde 2>&1 | logger -t okadora-firstboot || true
+    
+    mkdir -p /var/lib/okadora
+    touch /var/lib/okadora/flatpak-themes-configured
+    log "Flatpak theme configuration complete"
+fi
 # Script utilisateur séparé
 USER_SCRIPT="/usr/libexec/okadora_user_setup.sh"
 

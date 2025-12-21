@@ -52,7 +52,7 @@ Documentation : [Nix-Determinate](https://docs.determinate.systems/determinate-n
 └── noctalia.kdl           # Noctalia theme configuration
 ```
 
-
+> **Note** : When you will change the predefined colors schemes, you will need type **noctalia-sync** in Ghostty
 
 ## Packages
 

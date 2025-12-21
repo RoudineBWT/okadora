@@ -124,7 +124,7 @@ if [[ "$IS_NEW_USER" == true ]]; then
     
     # Thème sombre
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
-    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' 2>/dev/null || true
     
     # Boutons de fenêtre
     gsettings set org.gnome.desktop.wm.preferences button-layout 'appmenu:minimize,maximize,close' 2>/dev/null || true
@@ -215,7 +215,10 @@ if command -v flatpak >/dev/null 2>&1; then
     flatpak override --user --socket=wayland 2>/dev/null || true
     flatpak override --user --filesystem=xdg-config/gtk-3.0:ro 2>/dev/null || true
     flatpak override --user --filesystem=xdg-config/gtk-4.0:ro 2>/dev/null || true
-    
+    flatpak override --user --filesystem=xdg-config/qt5ct:ro 2>/dev/null || true
+    flatpak override --user --filesystem=xdg-config/qt6ct:ro 2>/dev/null || true
+    flatpak override --user --filesystem=xdg-data/color-schemes:ro 2>/dev/null || true
+    flatpak override --user --filesystem=~/.local/share/color-schemes:ro 2>/dev/null || true  
     log "Flatpaks setup complete"
 fi
 

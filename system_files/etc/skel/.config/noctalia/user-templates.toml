@@ -16,14 +16,18 @@
 #output_path = "/home/roudine/.cache/noctalia/placeholder.json"
 
 [templates.heroic]
-input_path = "~/.config/matugen/templates/heroic-theme.css"
+input_path = "~/.config/noctalia/templates/heroic-theme.css"
 output_path = "~/.config/heroic-themes/heroic-colors.css"
 
 [templates.Telegram]
-input_path = "~/.config/matugen/templates/telegram-colors.tdesktop-theme"
+input_path = "~/.config/noctalia/templates/telegram-colors.tdesktop-theme"
 output_path = "~/.config/telegram-desktop/themes/material-you.tdesktop-theme"
 
 [templates.starship]
-input_path = "~/.config/matugen/templates/starship-colors.toml"
+input_path = "~/.config/noctalia/templates/starship-colors.toml"
 output_path = "~/.config/starship.toml"
 post_hook = "starship init fish | source"
+
+[templates.kdeglobals]
+input_path = "~/.config/noctalia/templates/kdeglobals"
+output_path = "~/.config/kdeglobals"

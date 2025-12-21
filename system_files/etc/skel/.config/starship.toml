@@ -22,11 +22,11 @@ command_timeout = 3000
 #   Webber's colours   #
 ########################
 
-# Bright pink: (bg:#bfc2ff fg:#272b60)
-# Middle pink, bright text: (bg:#3e4278 fg:#e0e0ff)
-# Middle pink, faded text: (bg:#3e4278 fg:#e0e0ff)
-# Dark pink, regular text: (bg:#444559 fg:#e1e0f9)
-# Dark pink, highlighted: (bg:#444559 fg:#bfc2ff)
+# Bright pink: (bg:#e2b7f5 fg:#432255)
+# Middle pink, bright text: (bg:#5b396d fg:#f5d9ff)
+# Middle pink, faded text: (bg:#5b396d fg:#f5d9ff)
+# Dark pink, regular text: (bg:#504255 fg:#f0dcf4)
+# Dark pink, highlighted: (bg:#504255 fg:#e2b7f5)
 
 
 ###############
@@ -39,20 +39,20 @@ command_timeout = 3000
 # Note: Not supported in Powershell
 # @see: https://starship.rs/advanced-config/#enable-right-prompt
 right_format = """
-[](bg:transparent fg:#3e4278)\
+[](bg:transparent fg:#5b396d)\
 $time\
 $memory_usage\
-[](fg:#3e4278 bg:transparent)\
+[](fg:#5b396d bg:transparent)\
 \
 """
 
 # Left prompt. This is displayed on the left side of the terminal.
 # Colours (i.e. bg and fg) are always listed from left to right.
 format = """
-[](bg:#transparent fg:#bfc2ff)\
+[](bg:#transparent fg:#e2b7f5)\
 $os\
 $username\
-[](fg:#bfc2ff bg:#3e4278)\
+[](fg:#e2b7f5 bg:#5b396d)\
 $directory\
 ${custom.pregit}\
 $git_branch\
@@ -85,33 +85,33 @@ $character\
 
 # Exit code indicator
 [character] # The name of the module we are configuring is 'character'
-success_symbol = '[](bg:#3e4278 fg:#bfc2ff)[󱇫](bg:#bfc2ff fg:#272b60)[](fg:#bfc2ff bg:transparent)'
-error_symbol = '[](bg:#3e4278 fg:#ffb4ab)[󱇫](bg:#ffb4ab fg:#690005)[](fg:#ffb4ab bg:transparent)'
+success_symbol = '[](bg:#5b396d fg:#e2b7f5)[󱇫](bg:#e2b7f5 fg:#432255)[](fg:#e2b7f5 bg:transparent)'
+error_symbol = '[](bg:#5b396d fg:#ffb4ab)[󱇫](bg:#ffb4ab fg:#690005)[](fg:#ffb4ab bg:transparent)'
 format = '$symbol '
 
 # cross-platform way to check if we are in a git repo, takes 200ms
 [custom.nogit]
 when = ''' git rev-parse --git-dir ; test $? = False '''
-format = '[ ](bg:#3e4278)'
+format = '[ ](bg:#5b396d)'
 disabled = true
 
 # Either `Administrator`, `root` or the current user's username.
 [username]
 show_always = true
-style_user = "bg:#bfc2ff fg:#272b60"
-style_root = "bg:#bfc2ff fg:#272b60"
+style_user = "bg:#e2b7f5 fg:#432255"
+style_root = "bg:#e2b7f5 fg:#432255"
 format = '[ $user]($style)'
 disabled = false
 
 # Displays a symbol that represents the current operating system
 [os]
-style = "bg:#bfc2ff fg:#272b60"
+style = "bg:#e2b7f5 fg:#432255"
 format = '[$symbol]($style)'
 disabled = false # This doesn't work in pwsh in Webstorm terminal.
 
 # The current directory
 [directory]
-style = "bg:#3e4278 fg:#e0e0ff"
+style = "bg:#5b396d fg:#f5d9ff"
 format = "[ $path ]($style)"
 truncation_length = 1
 truncation_symbol = "…/"
@@ -125,7 +125,7 @@ symbol = "󰍛"
 [time]
 disabled = false
 time_format = "%R" # Hour:Minute Format
-style = "bg:#3e4278"
+style = "bg:#5b396d"
 format = '[$time]($style)'
 
 #######################
@@ -135,27 +135,27 @@ format = '[$time]($style)'
 
 [git_branch]
 symbol = ""
-style = "bg:#444559 fg:#e1e0f9"
-format = '[](fg:#3e4278 bg:#444559)[ $symbol](bg:#444559 fg:#bfc2ff)[ $branch ]($style)'
+style = "bg:#504255 fg:#f0dcf4"
+format = '[](fg:#5b396d bg:#504255)[ $symbol](bg:#504255 fg:#e2b7f5)[ $branch ]($style)'
 
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
-cherry_pick = '[🍒 PICKING](bg:#444559 fg:bold red)'
-rebase = '[ REBASING](bg:#444559 fg:bold green)'
-merge = '[ MERGING](bg:#444559 fg:bold yellow)'
-bisect = '[🔍 BISECTING](bg:#444559 fg:bold blue)'
-am = '[AM](bg:#444559 fg:bold green)'
-am_or_rebase = '[AM/REBASE](bg:#444559 fg:bold green)'
-revert = '[󰕍 REVERTING](bg:#444559 fg:bold red)'
+cherry_pick = '[🍒 PICKING](bg:#504255 fg:bold red)'
+rebase = '[ REBASING](bg:#504255 fg:bold green)'
+merge = '[ MERGING](bg:#504255 fg:bold yellow)'
+bisect = '[🔍 BISECTING](bg:#504255 fg:bold blue)'
+am = '[AM](bg:#504255 fg:bold green)'
+am_or_rebase = '[AM/REBASE](bg:#504255 fg:bold green)'
+revert = '[󰕍 REVERTING](bg:#504255 fg:bold red)'
 
 [git_metrics]
-added_style = "bg:#444559 fg:#e8b9d4"
-deleted_style = "bg:#444559 fg:#ffb4ab"
+added_style = "bg:#504255 fg:#f4b7b7"
+deleted_style = "bg:#504255 fg:#ffb4ab"
 format = '([+$added ]($added_style))([-$deleted ]($deleted_style))'
 disabled = false
 
 [git_status]
-style = "bg:#444559 fg:#bfc2ff"
+style = "bg:#504255 fg:#e2b7f5"
 conflicted = '=' # This branch has merge conflicts.
 ahead = ''
 behind = ''
@@ -167,7 +167,7 @@ modified = ''
 staged = ''
 renamed = '»'
 deleted = '✘'
-format = '([($all_status )($ahead_behind )]($style))[](bg:#444559 fg:#3e4278)'
+format = '([($all_status )($ahead_behind )]($style))[](bg:#504255 fg:#5b396d)'
 
 [fossil_branch]
 symbol = ""
@@ -184,24 +184,24 @@ symbol = ""
 
 [nodejs]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [bun]
 symbol = "󰅟"
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [docker_context]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ (context) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ (context) ]($style)'
 
 [package]
 format = '($style)[> $symbol$version ]($style)'
 symbol = '📦 '
 version_format = 'v${raw}'
-style = 'bold 208 bg:#3e4278'
+style = 'bold 208 bg:#5b396d'
 display_private = false
 disabled = true
 ################
@@ -210,122 +210,122 @@ disabled = true
 
 [aws]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [c]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [conda]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [dart]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [elixir]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [elm]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [golang]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [gradle]
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [haskell]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [haxe]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [java]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [julia]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [kotlin]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [lua]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [ocaml]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [perl]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [php]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [python]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [rlang]
 symbol = "󰟔"
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [ruby]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [rust]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [scala]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [swift]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 [zig]
 symbol = ""
-style = "bg:#3e4278 fg:#e0e0ff"
-format = '[$symbol](bg:#3e4278 fg:#bfc2ff)[ ($version) ]($style)'
+style = "bg:#5b396d fg:#f5d9ff"
+format = '[$symbol](bg:#5b396d fg:#e2b7f5)[ ($version) ]($style)'
 
 #############
 #   Other   #
