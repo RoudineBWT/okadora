@@ -13,11 +13,31 @@ if ! tuned-adm list | grep -q 'throughput-performance-bazzite'; then
     exec "$@"
 fi
 
-# Set performance profile, as long as the game is launched
+# Save the current profile before changing it
+CURRENT_PROFILE=$(tuned-adm active | awk '{print $NF}')
+
+# Function to restore profile on exit
+restore_profile() {
+    # If no profile was saved, default to balanced-bazzite
+    tuned-adm profile "${CURRENT_PROFILE:-balanced-bazzite}" &>/dev/null
+}
+
+# Set trap to restore profile when script exits
+trap restore_profile EXIT INT TERM
+
+# Set performance profile and launch the game
+tuned-adm profile throughput-performance-bazzite
+
+# Launch the game with or without systemd-inhibit
 if [ -n "$GAME_PERFORMANCE_SCREENSAVER_ON" ]; then
-    tuned-adm profile throughput-performance-bazzite
-    exec "$@"
+    "$@"
 else
-    tuned-adm profile throughput-performance-bazzite
-    exec systemd-inhibit --why "game-performance is running" -- "$@"
+    systemd-inhibit --why "game-performance is running" -- "$@"
 fi
+
+# Store exit code to return it properly
+EXIT_CODE=$?
+
+# The trap will automatically restore the profile here
+
+exit $EXIT_CODE
