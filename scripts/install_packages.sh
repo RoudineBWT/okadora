@@ -29,7 +29,7 @@ niri_packages=(
 "quickshell"
 "wlogout"
 "polkit-kde"
-"kirigami2" 
+"kf5-kirigami2" 
 "kf6-kirigami" 
 "qt6-qtdeclarative"
 )
