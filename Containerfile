@@ -48,6 +48,7 @@ RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.
 RUN dconf update || true
 
 # Enable Nix mount service
+RUN systemctl unmask nix-mount.service || true
 RUN systemctl enable nix-mount.service
 
 # Enable force niri session
