@@ -4,7 +4,29 @@ set -eoux pipefail
 
 echo "Installing Nix for immutable systems..."
 
-# Install the Nix RPM (ignore post-install errors as they're expected in containers)
+# FIX: kernel.sh breaks /root - recreate it if needed
+echo "Checking /root status..."
+ls -la / | grep "^d" | grep root || echo "/root issue detected"
+
+if [ ! -d /root ] || [ ! -w /root ]; then
+    echo "Fixing /root directory..."
+    rm -rf /root 2>/dev/null || true
+    mkdir -p /root
+    chmod 0750 /root
+    chown root:root /root
+fi
+
+# Verify /root works
+if ! touch /root/.test 2>/dev/null; then
+    echo "ERROR: Still cannot write to /root after fix"
+    mount | grep root || true
+    ls -la / | grep root || true
+    exit 1
+fi
+rm -f /root/.test
+echo "✓ /root is accessible"
+
+# Now install Nix
 dnf install -y https://nix-community.github.io/nix-installers/nix/x86_64/nix-multi-user-2.24.10.rpm || true
 
 # Verify installation
@@ -30,7 +52,7 @@ build-users-group = nixbld
 max-jobs = auto
 EOF
 
-# Setup channels during build - write directly to the FILE (not directory)
+# Setup channels - write directly to FILE
 echo "https://nixos.org/channels/nixpkgs-unstable nixpkgs" > /root/.nix-channels
 
 # Configure the default profile if nix binary exists
