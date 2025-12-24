@@ -4,11 +4,8 @@ set -ouex pipefail
 
 echo "Installing Nix for immutable systems..."
 
-# Ensure /root exists (required by RPM scriptlet)
-mkdir -p /root
-
 # Install Nix from community repository
-# The RPM scriptlet error about /root is non-critical, we'll ignore it
+# Note: The RPM scriptlet may show a non-critical warning about /root, which is expected
 dnf install -y https://nix-community.github.io/nix-installers/nix/x86_64/nix-multi-user-2.24.10.rpm || {
   # If installation fails with exit code 1 but files are installed, continue
   if rpm -q nix-multi-user; then
@@ -22,14 +19,6 @@ dnf install -y https://nix-community.github.io/nix-installers/nix/x86_64/nix-mul
 # For immutable systems: create necessary directories in writable locations
 mkdir -p /var/lib/nix
 mkdir -p /var/cache/nix
-
-# If /nix exists from the RPM installation, we're good
-# The system will bind-mount /var/lib/nix to /nix at runtime via systemd
-if [ -d /nix ]; then
-  echo "Nix installed successfully"
-else
-  echo "Creating /nix directory"
-  mkdir -p /nix
-fi
+mkdir -p /nix
 
 echo "Nix installation completed"
