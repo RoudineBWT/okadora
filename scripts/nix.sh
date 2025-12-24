@@ -2,31 +2,34 @@
 
 set -ouex pipefail
 
-echo "Installing Determinate Nix..."
+echo "Installing Nix for immutable systems..."
 
-# Download Determinate Nix installer
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix \
-  -o /tmp/install-determinate-nix.sh
+# Ensure /root exists (required by RPM scriptlet)
+mkdir -p /root
 
-chmod +x /tmp/install-determinate-nix.sh
-
-# Install Determinate Nix with appropriate flags for container builds
-# --no-confirm: Skip interactive prompts
-# --init none: Don't set up init system integration (we'll do it manually)
-/tmp/install-determinate-nix.sh install --no-confirm --init none || {
-  echo "Determinate Nix installation failed, trying fallback method..."
-
-  # Fallback: Install from nixos.org community installer
-  dnf install -y https://nix-community.github.io/nix-installers/nix/x86_64/nix-multi-user-2.24.10.rpm
-
-  # Move nix store if needed for traditional installer
-  if [ -d /nix/store ]; then
-    mkdir -p /var/lib/nix
-    mv /nix/* /var/lib/nix/ || true
+# Install Nix from community repository
+# The RPM scriptlet error about /root is non-critical, we'll ignore it
+dnf install -y https://nix-community.github.io/nix-installers/nix/x86_64/nix-multi-user-2.24.10.rpm || {
+  # If installation fails with exit code 1 but files are installed, continue
+  if rpm -q nix-multi-user; then
+    echo "Nix RPM installed despite scriptlet warnings"
+  else
+    echo "ERROR: Nix installation failed completely"
+    exit 1
   fi
 }
 
-# Clean up
-rm -f /tmp/install-determinate-nix.sh
+# For immutable systems: create necessary directories in writable locations
+mkdir -p /var/lib/nix
+mkdir -p /var/cache/nix
+
+# If /nix exists from the RPM installation, we're good
+# The system will bind-mount /var/lib/nix to /nix at runtime via systemd
+if [ -d /nix ]; then
+  echo "Nix installed successfully"
+else
+  echo "Creating /nix directory"
+  mkdir -p /nix
+fi
 
 echo "Nix installation completed"

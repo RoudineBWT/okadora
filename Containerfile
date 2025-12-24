@@ -27,11 +27,13 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     install -m755 /ctx/scripts/repository.sh /tmp/repository.sh && \
     install -m755 /ctx/scripts/install_packages.sh /tmp/install_packages.sh && \
     install -m755 /ctx/scripts/enable_services.sh /tmp/enable_services.sh && \
+    install -m755 /ctx/scripts/nix-mount.sh /tmp/nix-mount.sh && \
     install -m755 /ctx/scripts/nix.sh /tmp/nix.sh && \
     install -Dm755 /ctx/scripts/okadoranix-helper.sh /usr/bin/okadoranix-helper && \
     install -Dm755 /ctx/scripts/force-niri-session.sh /usr/bin/force-niri-session.sh && \
     bash /tmp/repository.sh && \
     bash /tmp/install_packages.sh && \
+    bash /tmp/nix-mount.sh && \
     bash /tmp/nix.sh && \
     bash /tmp/enable_services.sh && \
     rm -rf /system_files && \
