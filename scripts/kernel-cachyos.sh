@@ -9,6 +9,7 @@ chmod +x  05-rpmostree.install 50-dracut.install
 popd
 dnf -y copr enable bieszczaders/kernel-cachyos
 dnf -y copr disable bieszczaders/kernel-cachyos
+setsebool -P domain_kernel_load_modules on
 dnf -y --enablerepo copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos install \
   kernel-cachyos
 dnf -y copr enable bieszczaders/kernel-cachyos-addons
