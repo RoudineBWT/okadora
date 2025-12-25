@@ -19,7 +19,7 @@ RUN chmod 644 /usr/share/ublue-os/just/60-okadora.just
 RUN rm -rf /opt && mkdir /opt
 
 
-# BUILD PHASE
+# BUILD PHASE - VERSION BIND MOUNT
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,target=/var/cache \
     --mount=type=cache,target=/var/log \
@@ -28,6 +28,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     install -m755 /ctx/scripts/repository.sh /tmp/repository.sh && \
     install -m755 /ctx/scripts/install_packages.sh /tmp/install_packages.sh && \
     install -m755 /ctx/scripts/nix.sh /tmp/nix.sh && \
+    install -m755 /ctx/scripts/nix-bind-service.sh /tmp/nix-bind-service.sh && \
     install -m755 /ctx/scripts/kernel-cachyos.sh /tmp/kernel-cachyos.sh && \
     install -m755 /ctx/scripts/dracut.sh /tmp/dracut.sh && \
     install -m755 /ctx/scripts/enable_services.sh /tmp/enable_services.sh && \
@@ -37,16 +38,18 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     bash /tmp/repository.sh && \
     bash /tmp/install_packages.sh && \
     bash /tmp/nix.sh && \
+    bash /tmp/nix-bind-service.sh && \
     bash /tmp/kernel-cachyos.sh && \
     bash /tmp/dracut.sh && \
     bash /tmp/enable_services.sh && \
-    # cleanup
+
     rm -rf /system_files && \
     rpm-ostree cleanup -m && \
     rm -rf /var/cache/dnf/* && \
     rm -rf /var/cache/rpm-ostree/* && \
     rm -rf /var/tmp/* && \
     rm -rf /tmp/*
+
 
 # ADDING FLATHUB SYSTEM
 RUN flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
