@@ -66,25 +66,3 @@ git clone https://github.com/lincheney/fzf-tab-completion.git /usr/share/ublue-o
 mkdir -p /etc/xdg/quickshell/noctalia-shell/
 curl -sL https://github.com/noctalia-dev/noctalia-shell/releases/latest/download/noctalia-latest.tar.gz | \
 tar -xz --strip-components=1 -C /etc/xdg/quickshell/noctalia-shell/
-
-# Cachyos kernel testing
-for pkg in kernel kernel-core kernel-modules kernel-modules-core; do
-  rpm --erase $pkg --nodeps
-done
-pushd /usr/lib/kernel/install.d
-printf '%s\n' '#!/bin/sh' 'exit 0' > 05-rpmostree.install
-printf '%s\n' '#!/bin/sh' 'exit 0' > 50-dracut.install
-chmod +x  05-rpmostree.install 50-dracut.install
-popd
-dnf -y copr enable bieszczaders/kernel-cachyos-lto
-dnf -y copr disable bieszczaders/kernel-cachyos-lto
-setsebool -P domain_kernel_load_modules on
-dnf -y --enablerepo copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos-lto install \
-  kernel-cachyos-lto
-dnf -y copr enable bieszczaders/kernel-cachyos-addons
-dnf -y copr disable bieszczaders/kernel-cachyos-addons
-dnf -y --enablerepo copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos-addons swap zram-generator-defaults cachyos-settings
-dnf -y --enablerepo copr:copr.fedorainfracloud.org:bieszczaders:kernel-cachyos-addons install \
-  --allowerasing \
-  scx-scheds-git \
-  scx-manager
