@@ -37,10 +37,10 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     bash /tmp/install_packages.sh && \
     echo "=== Step 2: CachyOS Kernel (BEFORE overlay setup) ===" && \
     bash /tmp/kernel-cachyos.sh && \
-    echo "=== Step 3: Nix overlay service (AFTER kernel) ===" && \
-    bash /tmp/nix-overlay-service.sh && \
-    echo "=== Step 4: Nix installation ===" && \
+    echo "=== Step 3: Nix installation ===" && \
     bash /tmp/nix.sh && \
+    echo "=== Step 4: Nix overlay service (AFTER kernel and nix installation) ===" && \
+    bash /tmp/nix-overlay-service.sh && \
     echo "=== Step 5: Enable services ===" && \
     bash /tmp/enable_services.sh && \
     # Vérification finale
