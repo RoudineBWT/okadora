@@ -15,12 +15,12 @@ cat << 'EOF' > /etc/systemd/system/nix.mount
 [Unit]
 Description=Nix Store Mount Point
 Documentation=https://nixos.org/manual/nix/stable/
-# systemd gère automatiquement les dépendances sur /var
+# Attend que /var soit monté
 RequiresMountsFor=/var
 # Doit être monté avant que nix-daemon démarre
 Before=nix-daemon.service nix-daemon.socket
-# Monter après que le système de fichiers local soit prêt
-After=local-fs.target
+# IMPORTANT: Ne pas mettre After=local-fs.target pour éviter le cycle
+DefaultDependencies=no
 
 [Mount]
 What=/var/nix
@@ -29,7 +29,8 @@ Type=none
 Options=bind
 
 [Install]
-WantedBy=local-fs.target
+# CHANGEMENT CLÉ: multi-user.target au lieu de local-fs.target
+WantedBy=multi-user.target
 EOF
 
 # Activer le mount
