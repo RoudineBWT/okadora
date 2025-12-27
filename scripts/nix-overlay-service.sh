@@ -2,29 +2,28 @@
 
 set -ouex pipefail
 
-echo "=== Configuration Nix Overlay (compatible CachyOS) ==="
+echo "=== Configuration Nix Overlay (version simplifiée) ==="
 
-# Créer la structure de répertoires
-mkdir -p /usr/share/nix-store
-mkdir -p /var/lib/nix-store
-mkdir -p /var/cache/nix-store
+# Créer UNIQUEMENT dans /var (pas de /usr/share)
+mkdir -p /var/nix-lowerdir
+mkdir -p /var/nix-upperdir
+mkdir -p /var/nix-workdir
 mkdir -p /nix
 
 # Charger le module overlay au boot
 echo overlay > /etc/modules-load.d/overlay.conf
 
-# Créer le script de montage avec vérifications
+# Créer le script de montage simplifié
 cat << 'EOF' > /usr/bin/mount-nix-overlay.sh
 #!/bin/bash
 set -euo pipefail
 
 echo "Waiting for /var to be ready..."
 
-# Attendre que /var soit monté et writable (max 30 secondes)
+# Attendre que /var soit accessible
 timeout=30
 while [ $timeout -gt 0 ]; do
-    if [ -d /var/lib/nix-store ] && [ -w /var/lib/nix-store ] && \
-       [ -d /var/cache/nix-store ] && [ -w /var/cache/nix-store ]; then
+    if [ -w /var/nix-lowerdir ] && [ -w /var/nix-upperdir ] && [ -w /var/nix-workdir ]; then
         echo "/var is ready"
         break
     fi
@@ -43,7 +42,7 @@ if mountpoint -q /nix; then
     exit 0
 fi
 
-# Charger le module overlay si nécessaire
+# Charger le module overlay
 if ! lsmod | grep -q overlay; then
     modprobe overlay || {
         echo "ERROR: Failed to load overlay module"
@@ -51,22 +50,27 @@ if ! lsmod | grep -q overlay; then
     }
 fi
 
-# S'assurer que les répertoires existent
-mkdir -p /usr/share/nix-store
-mkdir -p /var/lib/nix-store
-mkdir -p /var/cache/nix-store
+# Créer les répertoires
+mkdir -p /var/nix-lowerdir
+mkdir -p /var/nix-upperdir
+mkdir -p /var/nix-workdir
 mkdir -p /nix
 
-# Monter l'overlay
+# NETTOYER le workdir (doit être vide)
+echo "Cleaning workdir..."
+rm -rf /var/nix-workdir/*
+rm -rf /var/nix-workdir/.* 2>/dev/null || true
+
+# Monter l'overlay - TOUT dans /var
 echo "Mounting OverlayFS for /nix..."
 mount -t overlay overlay \
-    -o lowerdir=/usr/share/nix-store,upperdir=/var/lib/nix-store,workdir=/var/cache/nix-store \
+    -o lowerdir=/var/nix-lowerdir,upperdir=/var/nix-upperdir,workdir=/var/nix-workdir \
     /nix || {
     echo "ERROR: Failed to mount overlay"
     exit 1
 }
 
-# Vérifier que le montage a réussi
+# Vérifier
 if mountpoint -q /nix; then
     echo "✓ /nix successfully mounted"
     exit 0
@@ -78,36 +82,24 @@ EOF
 
 chmod +x /usr/bin/mount-nix-overlay.sh
 
-# Créer le service systemd avec dépendances STRICTES pour CachyOS
+# Service systemd
 cat << 'EOF' > /etc/systemd/system/nix-overlay.service
 [Unit]
 Description=Mount OverlayFS for /nix
-Documentation=https://github.com/dnkmmr69420/nix-installer-scripts
-
-# Dépendances STRICTES pour garantir que /var est prêt
-RequiresMountsFor=/var/lib /var/cache
+RequiresMountsFor=/var
 After=local-fs.target var.mount
-Requires=local-fs.target
-
-# DOIT être avant nix-daemon
 Before=nix-daemon.service nix-daemon.socket
-
-# Conditions de démarrage
 ConditionPathExists=/usr/bin/mount-nix-overlay.sh
 ConditionPathIsMountPoint=!/nix
 
 [Service]
 Type=oneshot
-# Petit délai pour s'assurer que tout est stabilisé
 ExecStartPre=/usr/bin/sleep 2
-# Script de montage avec vérifications
 ExecStart=/usr/bin/mount-nix-overlay.sh
-# Vérification post-montage
 ExecStartPost=/usr/bin/mountpoint -q /nix
 ExecStop=/usr/bin/umount /nix
+ExecStopPost=/usr/bin/rm -rf /var/nix-workdir/*
 RemainAfterExit=yes
-
-# Retry automatique si échec (important pour CachyOS)
 Restart=on-failure
 RestartSec=5s
 StartLimitBurst=3
@@ -116,7 +108,6 @@ StartLimitBurst=3
 WantedBy=multi-user.target
 EOF
 
-# Activer le service
 systemctl enable nix-overlay.service
 
-echo "=== Nix overlay configuré avec support CachyOS ==="
+echo "=== Nix overlay configuré (tout dans /var) ==="

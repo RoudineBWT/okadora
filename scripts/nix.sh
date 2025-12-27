@@ -2,9 +2,9 @@
 
 set -ouex pipefail
 
-echo "=== Installation de Nix (dxc-0 style) ==="
+echo "=== Installation de Nix (version overlay simplifié) ==="
 
-# Créer /root si nécessaire (évite l'erreur du scriptlet)
+# Créer /root si nécessaire
 mkdir -p /root 2>/dev/null || true
 
 # Installer Nix
@@ -12,12 +12,12 @@ dnf install -y https://nix-community.github.io/nix-installers/nix/x86_64/nix-mul
     echo "ATTENTION: Installation de Nix avec des warnings (non-critiques)"
 }
 
-# Si Nix a créé des fichiers dans /nix/store, les déplacer vers usr/share/nix-store
-# (pour qu'ils soient dans le lowerdir de l'overlay)
+# Si Nix a créé des fichiers dans /nix/store, les déplacer vers /var/nix-lowerdir
+# (le lowerdir de l'overlay - données read-only initiales)
 if [ -d /nix/store ]; then
-    echo "Moving Nix store to /usr/share/nix-store..."
-    mkdir -p /usr/share/nix-store
-    cp -a /nix/* /usr/share/nix-store/ 2>/dev/null || true
+    echo "Moving Nix store to /var/nix-lowerdir..."
+    mkdir -p /var/nix-lowerdir
+    cp -a /nix/* /var/nix-lowerdir/ 2>/dev/null || true
     rm -rf /nix/* 2>/dev/null || true
 fi
 
