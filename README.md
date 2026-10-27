@@ -1,3 +1,6 @@
+# The GitHub repository has been archived and replaced by a NixOS distribution called Roudix. Here is the link to it:
+[Roudix](https://github.com/RoudineBWT/Roudix)
+
 # Okadora
 ![Screenshot of Okadora](assets/okadora.png)
 [Bazzite Gnome](https://github.com/ublue-os/bazzite) Based Image but with [Niri Window Manager](https://github.com/YaLTeR/niri) and [Noctalia](https://github.com/noctalia-dev/noctalia-shell).
